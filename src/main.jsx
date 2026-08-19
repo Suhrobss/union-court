@@ -132,7 +132,7 @@ function App() {
   if (index >= questions.length) {
     return (
       <main className="app finish">
-        <div className="brand"><span>МР ПРМТУ</span><strong>UNION COURT</strong></div>
+        <div className="brand"><span>НАВЧАЛЬНА СИМУЛЯЦІЯ</span><strong>UNION COURT</strong></div>
         <section className="hero-card finish-card">
           <div className="status-pill success">СИМУЛЯЦІЮ ЗАВЕРШЕНО</div>
           <h1>Ваша справа пройшла перші процесуальні етапи.</h1>
@@ -150,7 +150,7 @@ function App() {
   return (
     <main className="app">
       <header>
-        <div className="brand"><span>МР ПРМТУ</span><strong>UNION COURT</strong></div>
+        <div className="brand"><span>НАВЧАЛЬНА СИМУЛЯЦІЯ</span><strong>UNION COURT</strong></div>
         <div className="score-box"><span>Рейтинг захисту</span><strong>{score}</strong></div>
       </header>
 
@@ -192,7 +192,7 @@ function App() {
         )}
       </section>
 
-      <footer><span>СПРАВА 001</span><span>Прототип · без персональних даних</span></footer>
+      <footer><span>СПРАВА 001</span><span>Прототип · без ідентифікуючих даних</span></footer>
     </main>
   )
 }
