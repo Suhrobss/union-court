@@ -7,41 +7,13 @@ const GAME_API_URL = `${SUPABASE_URL}/functions/v1/union-court-api`
 export const DEFAULT_ROOM = 'FORUM26'
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: {
-    persistSession: false,
-    autoRefreshToken: false,
-    detectSessionInUrl: false,
-  },
+  auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
 })
-
-export function makePlayerId() {
-  if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID()
-  return `p_${Date.now()}_${Math.random().toString(36).slice(2)}`
-}
-
-export function createRoomChannel(roomCode, playerId) {
-  const room = (roomCode || DEFAULT_ROOM).trim().toUpperCase()
-  return supabase.channel(`union-court:${room}`, {
-    config: {
-      presence: { key: playerId || `screen_${Date.now()}` },
-    },
-  })
-}
-
-export function flattenPresence(state) {
-  return Object.values(state || {})
-    .flat()
-    .filter(Boolean)
-    .filter((item) => item.kind === 'player')
-}
 
 async function gameApi(payload) {
   const response = await fetch(GAME_API_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      apikey: SUPABASE_PUBLISHABLE_KEY,
-    },
+    headers: { 'Content-Type': 'application/json', apikey: SUPABASE_PUBLISHABLE_KEY },
     body: JSON.stringify(payload),
   })
   const data = await response.json().catch(() => ({}))
@@ -49,14 +21,19 @@ async function gameApi(payload) {
   return data
 }
 
-export async function joinGame(displayName, roomCode = DEFAULT_ROOM) {
-  return gameApi({ action: 'join', displayName, roomCode })
+export function createRefreshChannel(roomCode, onRefresh) {
+  const room = (roomCode || DEFAULT_ROOM).trim().toUpperCase()
+  const channel = supabase.channel(`union-court:${room}`, { config: { broadcast: { self: false } } })
+  channel
+    .on('broadcast', { event: 'refresh' }, (payload) => onRefresh?.('refresh', payload?.payload || {}))
+    .on('broadcast', { event: 'session_reset' }, (payload) => onRefresh?.('session_reset', payload?.payload || {}))
+    .subscribe()
+  return channel
 }
 
-export async function submitGameStage({ playerId, sessionToken, stageId, answer }) {
-  return gameApi({ action: 'submit', playerId, sessionToken, stageId, answer })
-}
-
-export async function loadLeaderboard(roomCode = DEFAULT_ROOM) {
-  return gameApi({ action: 'leaderboard', roomCode })
-}
+export const joinGame = (displayName, roomCode = DEFAULT_ROOM) => gameApi({ action: 'join', displayName, roomCode })
+export const resumeGame = (playerId, sessionToken) => gameApi({ action: 'resume', playerId, sessionToken })
+export const restartGame = (playerId, sessionToken) => gameApi({ action: 'restart', playerId, sessionToken })
+export const submitGameStage = ({ playerId, sessionToken, stageId, answer }) => gameApi({ action: 'submit', playerId, sessionToken, stageId, answer })
+export const loadLeaderboard = (roomCode = DEFAULT_ROOM) => gameApi({ action: 'leaderboard', roomCode })
+export const startNewSession = (roomCode = DEFAULT_ROOM, hostPin = '') => gameApi({ action: 'new_session', roomCode, hostPin })
