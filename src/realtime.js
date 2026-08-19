@@ -21,8 +21,12 @@ async function gameApi(payload) {
   return data
 }
 
+function normalizeRoom(roomCode) {
+  return (roomCode || DEFAULT_ROOM).trim().toUpperCase()
+}
+
 export function createRefreshChannel(roomCode, onRefresh) {
-  const room = (roomCode || DEFAULT_ROOM).trim().toUpperCase()
+  const room = normalizeRoom(roomCode)
   const channel = supabase.channel(`union-court:${room}`, { config: { broadcast: { self: false } } })
   channel
     .on('broadcast', { event: 'refresh' }, (payload) => onRefresh?.('refresh', payload?.payload || {}))
@@ -31,9 +35,42 @@ export function createRefreshChannel(roomCode, onRefresh) {
   return channel
 }
 
+async function broadcastRoom(roomCode, event, payload = {}) {
+  const room = normalizeRoom(roomCode)
+  const channel = supabase.channel(`union-court:${room}`, { config: { broadcast: { self: true } } })
+  return new Promise((resolve) => {
+    let settled = false
+    const done = (value) => {
+      if (settled) return
+      settled = true
+      setTimeout(() => supabase.removeChannel(channel), 120)
+      resolve(value)
+    }
+    const timer = setTimeout(() => done(false), 2500)
+    channel.subscribe(async (status) => {
+      if (status !== 'SUBSCRIBED') return
+      try {
+        await channel.send({ type: 'broadcast', event, payload })
+        clearTimeout(timer)
+        done(true)
+      } catch {
+        clearTimeout(timer)
+        done(false)
+      }
+    })
+  })
+}
+
 export const joinGame = (displayName, roomCode = DEFAULT_ROOM) => gameApi({ action: 'join', displayName, roomCode })
 export const resumeGame = (playerId, sessionToken) => gameApi({ action: 'resume', playerId, sessionToken })
 export const restartGame = (playerId, sessionToken) => gameApi({ action: 'restart', playerId, sessionToken })
 export const submitGameStage = ({ playerId, sessionToken, stageId, answer }) => gameApi({ action: 'submit', playerId, sessionToken, stageId, answer })
 export const loadLeaderboard = (roomCode = DEFAULT_ROOM) => gameApi({ action: 'leaderboard', roomCode })
-export const startNewSession = (roomCode = DEFAULT_ROOM, hostPin = '') => gameApi({ action: 'new_session', roomCode, hostPin })
+export async function startNewSession(roomCode = DEFAULT_ROOM, hostPin = '') {
+  const result = await gameApi({ action: 'new_session', roomCode, hostPin })
+  await broadcastRoom(roomCode, 'session_reset', {
+    sessionId: result.session?.id,
+    sessionNo: result.session?.session_no,
+  })
+  return result
+}
