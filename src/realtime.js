@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 
 const SUPABASE_URL = 'https://lzgbrwwzxqmoivndagyh.supabase.co'
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_uLsHZdpZedzJKX42KOfnjQ_4L-1TNDr'
+const GAME_API_URL = `${SUPABASE_URL}/functions/v1/union-court-api`
 
 export const DEFAULT_ROOM = 'FORUM26'
 
@@ -32,9 +33,30 @@ export function flattenPresence(state) {
     .flat()
     .filter(Boolean)
     .filter((item) => item.kind === 'player')
-    .sort((a, b) => {
-      if ((b.score || 0) !== (a.score || 0)) return (b.score || 0) - (a.score || 0)
-      if ((b.accuracy || 0) !== (a.accuracy || 0)) return (b.accuracy || 0) - (a.accuracy || 0)
-      return (a.elapsedMs || Infinity) - (b.elapsedMs || Infinity)
-    })
+}
+
+async function gameApi(payload) {
+  const response = await fetch(GAME_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      apikey: SUPABASE_PUBLISHABLE_KEY,
+    },
+    body: JSON.stringify(payload),
+  })
+  const data = await response.json().catch(() => ({}))
+  if (!response.ok) throw new Error(data?.error || `Game API error ${response.status}`)
+  return data
+}
+
+export async function joinGame(displayName, roomCode = DEFAULT_ROOM) {
+  return gameApi({ action: 'join', displayName, roomCode })
+}
+
+export async function submitGameStage({ playerId, sessionToken, stageId, answer }) {
+  return gameApi({ action: 'submit', playerId, sessionToken, stageId, answer })
+}
+
+export async function loadLeaderboard(roomCode = DEFAULT_ROOM) {
+  return gameApi({ action: 'leaderboard', roomCode })
 }
