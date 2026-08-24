@@ -19,14 +19,14 @@
 .logo-slot,.logo-slot.brand-logo-v3{width:78px!important;height:78px!important;min-width:78px!important;min-height:78px!important}
 .logo-slot.small,.logo-slot.brand-logo-v3.small{width:52px!important;height:52px!important;min-width:52px!important;min-height:52px!important;padding:6px!important}
 .logo-slot.room-logo,.logo-slot.brand-logo-v3.room-logo{width:82px!important;height:82px!important;min-width:82px!important;min-height:82px!important}
-.logo-slot img,
-.logo-slot.small img,
-.logo-slot.room-logo img,
-.logo-slot.brand-logo-v3 img,
-.logo-slot.brand-logo-v3.small img,
-.logo-slot.brand-logo-v3.room-logo img{
-  width:82%!important;
-  height:82%!important;
+html body .logo-slot img,
+html body .logo-slot.small img,
+html body .logo-slot.room-logo img,
+html body .logo-slot.brand-logo-v3 img,
+html body .logo-slot.brand-logo-v3.small img,
+html body .logo-slot.brand-logo-v3.room-logo img{
+  width:80%!important;
+  height:80%!important;
   max-width:none!important;
   max-height:none!important;
   object-fit:contain!important;
