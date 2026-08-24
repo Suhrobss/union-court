@@ -4,7 +4,7 @@ const SUPABASE_URL = 'https://lzgbrwwzxqmoivndagyh.supabase.co'
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_uLsHZdpZedzJKX42KOfnjQ_4L-1TNDr'
 const GAME_API_URL = `${SUPABASE_URL}/functions/v1/union-court-api`
 
-export const DEFAULT_ROOM = 'FORUM26'
+export const DEFAULT_ROOM = 'THELAKE'
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
