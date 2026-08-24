@@ -17,7 +17,11 @@ async function gameApi(payload) {
     body: JSON.stringify(payload),
   })
   const data = await response.json().catch(() => ({}))
-  if (!response.ok) throw new Error(data?.error || `Game API error ${response.status}`)
+  if (!response.ok) {
+    const error = new Error(data?.error || `Game API error ${response.status}`)
+    error.data = data
+    throw error
+  }
   return data
 }
 
@@ -31,6 +35,7 @@ export function createRefreshChannel(roomCode, onRefresh) {
   channel
     .on('broadcast', { event: 'refresh' }, (payload) => onRefresh?.('refresh', payload?.payload || {}))
     .on('broadcast', { event: 'session_reset' }, (payload) => onRefresh?.('session_reset', payload?.payload || {}))
+    .on('broadcast', { event: 'stage_advance' }, (payload) => onRefresh?.('stage_advance', payload?.payload || {}))
     .subscribe()
   return channel
 }
@@ -66,6 +71,17 @@ export const resumeGame = (playerId, sessionToken) => gameApi({ action: 'resume'
 export const restartGame = (playerId, sessionToken) => gameApi({ action: 'restart', playerId, sessionToken })
 export const submitGameStage = ({ playerId, sessionToken, stageId, answer }) => gameApi({ action: 'submit', playerId, sessionToken, stageId, answer })
 export const loadLeaderboard = (roomCode = DEFAULT_ROOM) => gameApi({ action: 'leaderboard', roomCode })
+
+export async function setPresenterStage(roomCode = DEFAULT_ROOM, hostPin = '', stageIndex = 0) {
+  const result = await gameApi({ action: 'set_stage', roomCode, hostPin, stageIndex })
+  await broadcastRoom(roomCode, 'stage_advance', {
+    stageIndex: result.room?.current_stage,
+    status: result.room?.status,
+    sessionId: result.session?.id,
+  })
+  return result
+}
+
 export async function startNewSession(roomCode = DEFAULT_ROOM, hostPin = '') {
   const result = await gameApi({ action: 'new_session', roomCode, hostPin })
   await broadcastRoom(roomCode, 'session_reset', {
