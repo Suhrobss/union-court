@@ -1,9 +1,12 @@
-/* Event-specific polish: clean public-facing UI, fit the MR PRMTU logo, remove pre-answer hints. */
+/* Event-specific polish: The Lake of knowledge */
 
-/* Logo: never crop the source artwork. */
+/* Logo: fit the full artwork inside the circle, never crop it. */
 .logo-slot,
 .logo-slot.small,
-.logo-slot.room-logo{
+.logo-slot.room-logo,
+.logo-slot.brand-logo-v3,
+.logo-slot.brand-logo-v3.small,
+.logo-slot.brand-logo-v3.room-logo{
   border:1px solid rgba(57,105,132,.18)!important;
   border-radius:50%!important;
   background:#fff!important;
@@ -13,14 +16,17 @@
   display:grid!important;
   place-items:center!important;
 }
-.logo-slot{width:78px!important;height:78px!important;min-width:78px!important;min-height:78px!important}
-.logo-slot.small{width:52px!important;height:52px!important;min-width:52px!important;min-height:52px!important;padding:6px!important}
-.logo-slot.room-logo{width:82px!important;height:82px!important;min-width:82px!important;min-height:82px!important}
+.logo-slot,.logo-slot.brand-logo-v3{width:78px!important;height:78px!important;min-width:78px!important;min-height:78px!important}
+.logo-slot.small,.logo-slot.brand-logo-v3.small{width:52px!important;height:52px!important;min-width:52px!important;min-height:52px!important;padding:6px!important}
+.logo-slot.room-logo,.logo-slot.brand-logo-v3.room-logo{width:82px!important;height:82px!important;min-width:82px!important;min-height:82px!important}
 .logo-slot img,
 .logo-slot.small img,
-.logo-slot.room-logo img{
-  width:86%!important;
-  height:86%!important;
+.logo-slot.room-logo img,
+.logo-slot.brand-logo-v3 img,
+.logo-slot.brand-logo-v3.small img,
+.logo-slot.brand-logo-v3.room-logo img{
+  width:82%!important;
+  height:82%!important;
   max-width:none!important;
   max-height:none!important;
   object-fit:contain!important;
@@ -28,19 +34,23 @@
   transform:none!important;
 }
 
-/* The event has one room; participants should not see an internal room code. */
+/* One event, one room: never expose the internal room identifier. */
 .join-card input:nth-of-type(2){display:none!important}
+.join-room-hint-v3{display:none!important}
 .room-code{min-width:190px!important;text-transform:none!important;letter-spacing:0!important}
 .room-code small{display:block;font-size:8px;letter-spacing:.12em;color:#738693;margin-bottom:3px}
 .room-code b{font-size:15px!important;line-height:1.15!important;letter-spacing:0!important;white-space:nowrap}
+.participant-lobby-v3 .lobby-room span:first-child{display:none!important}
+.room-lobby-join .join-code{letter-spacing:0!important;text-transform:none!important}
 
-/* No hints before a decision is submitted. */
+/* No pre-answer hints. Correct logic appears only after submission. */
 .term-note{display:none!important}
 .focus-stage .instruction{max-width:520px;margin:18px auto 24px!important;text-align:center}
 .path-door p{display:none!important}
-.path-door small{opacity:.78}
+.path-door small{display:none!important}
+.entity-zone:before{content:'ПІДРОЗДІЛИ РОБОТОДАВЦЯ'!important}
 
-/* Remove developer/testing tone from the public experience. */
+/* Cleaner public-facing language. */
 .paper-safe{font-size:7px!important;letter-spacing:.08em!important;color:#87765e!important}
 .privacy-note{font-size:9px!important;color:#83919b!important}
 .waiting-card:not(:has(.decision-review)) .waiting-pulse span::after{content:'ОЧІКУЄМО ПОЧАТКУ'!important}
@@ -48,13 +58,12 @@
 .waiting-card:not(:has(.decision-review)) .presenter-wait>span::after{content:'ПЕРШИЙ КРОК'!important}
 .waiting-card:not(:has(.decision-review)) .presenter-wait p::after{content:'Починаємо за сигналом ведучого.'!important}
 
-/* Softer, more event-like top bar. */
 .player-head,.room-head{position:relative}
 .brand small{letter-spacing:.12em!important}
 
 @media(max-width:680px){
-  .logo-slot{width:64px!important;height:64px!important;min-width:64px!important;min-height:64px!important;padding:7px!important}
-  .logo-slot.small{width:46px!important;height:46px!important;min-width:46px!important;min-height:46px!important}
+  .logo-slot,.logo-slot.brand-logo-v3{width:64px!important;height:64px!important;min-width:64px!important;min-height:64px!important;padding:7px!important}
+  .logo-slot.small,.logo-slot.brand-logo-v3.small{width:46px!important;height:46px!important;min-width:46px!important;min-height:46px!important}
   .room-code{min-width:0!important;width:auto!important}
   .room-code b{font-size:12px!important;white-space:normal}
 }
