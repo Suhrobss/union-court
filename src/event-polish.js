@@ -19,6 +19,7 @@ function replaceExactText(root=document){
       .replaceAll('НАВЧАЛЬНА СИМУЛЯЦІЯ',EVENT_TITLE)
       .replaceAll('QA test','')
       .replaceAll('QA TEST','')
+      .replaceAll('QA Test','')
     if(next!==text) node.nodeValue=next
   }
 }
@@ -28,10 +29,11 @@ function polish(){
   replaceExactText(document.body)
 
   document.querySelectorAll('.room-code').forEach(el=>{
-    if(el.dataset.eventPolished==='1') return
     el.dataset.eventPolished='1'
     el.innerHTML=`<small>ПОДІЯ</small><b>${EVENT_TITLE}</b>`
   })
+
+  document.querySelectorAll('.join-room-hint-v3').forEach(el=>el.remove())
 
   const join=document.querySelector('.join-card')
   if(join){
@@ -52,14 +54,33 @@ function polish(){
     if(el.textContent?.includes('До фіксації')) el.textContent='Дослідіть документ і позначте фрагменти, які вважаєте важливими.'
   })
 
-  document.querySelectorAll('.room-head .brand small').forEach(el=>{
-    el.textContent=EVENT_TITLE
-  })
-  document.querySelectorAll('.join-page>.brand small').forEach(el=>{
+  document.querySelectorAll('.room-head .brand small,.join-page>.brand small').forEach(el=>{
     el.textContent=EVENT_TITLE
   })
 
-  document.querySelectorAll('.leader,.lobby-player,.player-chip').forEach(el=>{
+  document.querySelectorAll('.participant-lobby-v3').forEach(box=>{
+    const eyebrow=box.querySelector('.eyebrow')
+    if(eyebrow) eyebrow.textContent='ВИ У ГРІ'
+    const h1=box.querySelector('h1')
+    if(h1) h1.textContent='Готові до старту'
+    const p=box.querySelector('p')
+    if(p) p.textContent='Все готово. Починаємо разом за сигналом ведучого.'
+    const roomBox=box.querySelector('.lobby-room')
+    if(roomBox) roomBox.innerHTML=`<span><b>${EVENT_TITLE}</b></span><span>Очікуємо початку</span>`
+  })
+
+  document.querySelectorAll('.room-lobby-v3').forEach(box=>{
+    const eyebrow=box.querySelector('.room-eyebrow')
+    if(eyebrow) eyebrow.textContent=EVENT_TITLE
+    const sub=box.querySelector('.room-sub')
+    if(sub) sub.textContent='Приєднуйтесь — починаємо всі разом.'
+    const joinText=box.querySelector('.room-lobby-join p')
+    if(joinText) joinText.textContent='Введіть ім’я — і ви готові до старту.'
+    const code=box.querySelector('.join-code')
+    if(code) code.textContent=EVENT_TITLE
+  })
+
+  document.querySelectorAll('.leader,.lobby-player,.player-chip,.participant-chips-v3 span').forEach(el=>{
     if(/QA\s*test/i.test(el.textContent||'')) el.remove()
   })
 }
