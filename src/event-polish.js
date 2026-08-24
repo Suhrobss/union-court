@@ -1,5 +1,11 @@
 const EVENT_TITLE = 'The Lake of knowledge'
 
+const currentUrl=new URL(window.location.href)
+if((currentUrl.searchParams.get('room')||'').toUpperCase()==='FORUM26'){
+  currentUrl.searchParams.set('room','THELAKE')
+  window.location.replace(currentUrl.toString())
+}
+
 function replaceExactText(root=document){
   const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT)
   const nodes=[]
