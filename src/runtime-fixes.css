@@ -1,0 +1,17 @@
+/* UX edge-state fixes for presenter-paced mode */
+.rep-examples span:last-child{display:none}
+
+/* Before the first presenter start there is no submitted decision yet. */
+.waiting-card:not(:has(.decision-review)) .waiting-pulse span{font-size:0}
+.waiting-card:not(:has(.decision-review)) .waiting-pulse span::after{content:'ОЧІКУЄМО СТАРТУ ВЕДУЧОГО';font-size:9px}
+.waiting-card:not(:has(.decision-review))>h1{font-size:0;margin-top:18px}
+.waiting-card:not(:has(.decision-review))>h1::after{content:'Справу ще не відкрито';font-size:clamp(30px,5vw,50px);line-height:1.04}
+.waiting-card:not(:has(.decision-review)) .presenter-wait>span{font-size:0}
+.waiting-card:not(:has(.decision-review)) .presenter-wait>span::after{content:'ПЕРШИЙ ЕТАП';font-size:8px;letter-spacing:.14em}
+.waiting-card:not(:has(.decision-review)) .presenter-wait p{font-size:0}
+.waiting-card:not(:has(.decision-review)) .presenter-wait p::after{content:'Ведучий відкриє етап одночасно для всього залу. Від цього моменту стартує і бонус швидкості.';font-size:11px;line-height:1.5}
+
+/* Unscored narrative transitions should not show a meaningless +0 card. */
+.decision-review:not(:has(.review-options,.term-review,.route-review,.bag-review,.review-explainer)) .review-score{display:none}
+
+@media(max-width:680px){.rep-examples span:last-child{display:none}}
