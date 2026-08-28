@@ -15,3 +15,19 @@
  .order-layout .inspection{margin-top:14px}
  .room-lobby-built .join img{width:min(330px,78vw)!important}
 }
+
+/* v10 — representation stage: explicit two-step interaction */
+.defense-steps-v10{display:flex;align-items:center;justify-content:center;gap:10px;margin:8px 0 20px}
+.defense-steps-v10 span{padding:8px 12px;border-radius:999px;background:#edf3f6;color:#768995;font-size:10px;font-weight:800;letter-spacing:.03em}
+.defense-steps-v10 span.active{background:#0d628a;color:#fff;box-shadow:0 8px 20px rgba(13,98,138,.16)}
+.defense-steps-v10 span.done{background:#e8f5f1;color:#16745a}
+.defense-steps-v10 i{font-style:normal;color:#8fa2ad}
+.defense-internal-next{display:block;width:min(420px,100%);margin:18px auto 0;min-height:50px;border:0;border-radius:14px;background:#0d628a;color:#fff;font-weight:900;font-size:13px;box-shadow:0 12px 26px rgba(13,98,138,.16)}
+.defense-internal-next:disabled{opacity:.38;box-shadow:none}
+.defense-route-summary-v10{display:flex;justify-content:space-between;gap:16px;align-items:center;margin:4px 0 18px;padding:15px 17px;border:1px solid #cfe0e7;border-radius:16px;background:linear-gradient(145deg,#f8fbfc,#eef6f8)}
+.defense-route-summary-v10 small,.defense-route-summary-v10 b{display:block}.defense-route-summary-v10 small{font-size:8px;letter-spacing:.1em;color:#6d8490;margin-bottom:4px}.defense-route-summary-v10 b{color:#173f54}
+.defense-route-summary-v10 button{border:1px solid #bfd3dc;background:#fff;border-radius:11px;padding:9px 12px;color:#17617f;font-weight:800}
+.defense-choice-note-v10{margin-top:13px;padding:11px 13px;border-radius:12px;background:#f7f9fa;color:#6b7f89;font-size:10px;line-height:1.5;text-align:center}
+.defense-stage .credential-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.defense-stage .credential-cards button{min-height:68px;text-align:left;padding:13px 14px}
+@media(max-width:640px){.defense-stage .credential-cards{grid-template-columns:1fr}.defense-route-summary-v10{align-items:flex-start}.defense-steps-v10{gap:6px}.defense-steps-v10 span{font-size:9px;padding:7px 9px}}
